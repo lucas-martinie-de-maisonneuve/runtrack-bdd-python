@@ -1,0 +1,1 @@
+mysqldump -u root -p LaPlateforme > C:\Users\lucas\Desktop\2024\laplateforme.sql
