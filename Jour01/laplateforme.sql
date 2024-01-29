@@ -38,7 +38,7 @@ CREATE TABLE `etudiant` (
 
 LOCK TABLES `etudiant` WRITE;
 /*!40000 ALTER TABLE `etudiant` DISABLE KEYS */;
-INSERT INTO `etudiant` VALUES (1,'Betty Spaghetti','Betty',23,'betty.Spaghetti@laplateforme.io'),(2,'Chuck Steak','Chuck',45,'chuck.steak@laplateforme.io'),(3,'John Doe','John',18,'john.doe@laplateforme.io'),(4,'Binkie Barnes','Binkie',16,'binkie.barnes@laplateforme.io'),(5,'Gertrude Dupuis','Gertrude',20,'gertrude.dupuis@laplateforme.io');
+INSERT INTO `etudiant` VALUES (1,'Spaghetti','Betty',23,'betty.Spaghetti@laplateforme.io'),(2,'Steak','Chuck',45,'chuck.steak@laplateforme.io'),(3,'Doe','John',18,'john.doe@laplateforme.io'),(4,'Barnes','Binkie',16,'binkie.barnes@laplateforme.io'),(5,'Dupuis','Gertrude',20,'gertrude.dupuis@laplateforme.io');
 /*!40000 ALTER TABLE `etudiant` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-29 11:00:47
+-- Dump completed on 2024-01-29 11:28:21
