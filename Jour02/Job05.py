@@ -9,16 +9,11 @@ mydb = mysql.connector.connect(
 
 cursor = mydb.cursor()
 
-cursor.execute("SELECT superficie FROM etage")
+cursor.execute("SELECT SUM(superficie) FROM etage")
 
-results = cursor.fetchall()
+results = cursor.fetchone()
 
-print(results)
-superficie = 0
-for i in results:
-    superficie += i[0]
-
-print(f"La superficie de la plateforme est de {superficie} m²")
+print(f"La superficie de la plateforme est de {results[0]} m²")
 
 cursor.close()
 mydb.close()

@@ -9,14 +9,11 @@ mydb = mysql.connector.connect(
 
 cursor = mydb.cursor()
 
-cursor.execute("SELECT capacite FROM salle")
+cursor.execute("SELECT SUM(capacite) FROM salle")
 
-results = cursor.fetchall()
+results = cursor.fetchone()
 
-capacite = 0
-for i in results:
-    capacite += i[0]
-print(f"La capacité de toute les salles est de : {capacite}")
+print("La capacité de toute les salles est de :", results[0])
 
 cursor.close()
 mydb.close()
