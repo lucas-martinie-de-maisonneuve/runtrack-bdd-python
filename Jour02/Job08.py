@@ -53,19 +53,19 @@ class GestionZoo(Main):
         self.cursor = self.my_db.cursor()
 
     def get_animal_nom(self):
-        nom = input("Veuillez entrer le nom de l'animal : ")
+        nom = input("           --> Veuillez entrer le nom de l'animal : ")
         return nom
     def get_animal_race(self):
-        race = input("Veuillez entrer la race de l'animal : ")
+        race = input("           --> Veuillez entrer la race de l'animal : ")
         return race
     def get_animal_cage(self):
-        id_cage = input("Veuillez entrer l'identifiant de la cage : ")
+        id_cage = input("           --> Veuillez entrer l'identifiant de la cage : ")
         return id_cage
     def get_animal_naissance(self):
-        naissance = input("Veuillez entrer la date de naissance de l'animal (YYYY-MM-DD) : ")
+        naissance = input("           --> Veuillez entrer la date de naissance de l'animal (YYYY-MM-DD) : ")
         return naissance
     def get_animal_origine(self):
-        origine = input("Veuillez entrer le pays d'origine de l'animal : ")
+        origine = input("           --> Veuillez entrer le pays d'origine de l'animal : ")
         return origine
     def get_input_modification(self, nom):
         choix = int(input(f""" 
