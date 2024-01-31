@@ -1,6 +1,15 @@
 import mysql.connector
 
 class Main:
+    def __init__(self):
+        self.my_db = mysql.connector.connect(
+            host="localhost",
+            user='root',
+            password='$~Bc4gB9',
+            database='Zoo'
+        )
+        self.cursor = self.my_db.cursor()
+class Menu:
     def menu(self):
         choix = int(input(""" 
                                 Veuillez choisir l'action à effectuer (Entrez un chiffre de 1 à 9)
@@ -36,7 +45,7 @@ class Main:
     def close_continue(self):
         continue_choix = int(input("""          --> Voulez vous revenir au menu ? (Entrez 1 ou 2 pour quitter) <-- """))
         if continue_choix == 1:
-            main.menu()
+            self.menu()
         elif continue_choix == 2:
             return
         else:
@@ -44,19 +53,13 @@ class Main:
             self.close_continue()
 class GestionZoo(Main):
     def __init__(self):
-        self.my_db = mysql.connector.connect(
-            host="localhost",
-            user='root',
-            password='$~Bc4gB9',
-            database='Zoo'
-        )
-        self.cursor = self.my_db.cursor()
+        Main.__init__(self)
 
     def get_animal_nom(self):
-        nom = input("           --> Veuillez entrer le nom de l'animal : ")
+        nom = input("           --> Veuillez entrer le nom de l'animal : ").capitalize()
         return nom
     def get_animal_race(self):
-        race = input("           --> Veuillez entrer la race de l'animal : ")
+        race = input("           --> Veuillez entrer la race de l'animal : ").capitalize()
         return race
     def get_animal_cage(self):
         id_cage = input("           --> Veuillez entrer l'identifiant de la cage : ")
@@ -65,7 +68,7 @@ class GestionZoo(Main):
         naissance = input("           --> Veuillez entrer la date de naissance de l'animal (YYYY-MM-DD) : ")
         return naissance
     def get_animal_origine(self):
-        origine = input("           --> Veuillez entrer le pays d'origine de l'animal : ")
+        origine = input("           --> Veuillez entrer le pays d'origine de l'animal : ").capitalize()
         return origine
     def get_input_modification(self, nom):
         choix = int(input(f""" 
@@ -101,15 +104,14 @@ class GestionZoo(Main):
                 print("            !! Capacité maximale de la cage atteinte. Impossible d'ajouter un nouvel animal !!")
         else:
             print("                !! La cage spécifiée n'existe pas. Impossible d'ajouter un animal !!")
-        
-        main.close_continue()
+        menu.close_continue()
 
     def remove_animal(self):
         nom = self.get_animal_nom()
         self.cursor.execute("DELETE FROM animal WHERE nom = %s", (nom,))
         self.my_db.commit()
         print("                    --> Animal supprimé avec succès <--")
-        main.close_continue()
+        menu.close_continue()
 
     def modify_animal(self):
         nom = self.get_animal_nom()
@@ -131,19 +133,13 @@ class GestionZoo(Main):
             self.cursor.execute("UPDATE animal SET nom = %s WHERE nom = %s", (nouvelle_cage, nom))
         else:
             print("                    !! Choix invalide !!")
-            main.close_continue()
+            menu.close_continue()
         self.my_db.commit()
         print("                    --> Informations de l'animal modifiées avec succès <--")
-        main.close_continue()
+        menu.close_continue()
 class GestionCage(Main):
     def __init__(self):
-        self.my_db = mysql.connector.connect(
-            host="localhost",
-            user='root',
-            password='$~Bc4gB9',
-            database='Zoo'
-        )
-        self.cursor = self.my_db.cursor()
+        Main.__init__(self)
 
     def get_cage_superficie(self):
         superficie = float(input("                    --> Veuillez entrer la superficie de la cage : "))
@@ -159,7 +155,7 @@ class GestionCage(Main):
         self.cursor.execute("INSERT INTO cage (superficie, capacite_max) VALUES (%s, %s)", (superficie, capacite_max))
         self.my_db.commit()
         print("                    --> Cage ajoutée avec succès <--")
-        main.close_continue()
+        menu.close_continue()
 
     def modify_cage(self):
         show.afficher_all_cages()
@@ -180,19 +176,13 @@ class GestionCage(Main):
             self.cursor.execute("UPDATE cage SET capacite_max = %s WHERE id = %s", (nouvelle_capacite_max, id_cage))
         else:
             print("                    !! Choix invalide !!")
-            main.close_continue()
+            menu.close_continue()
         self.my_db.commit()
         print("                    --> Informations de la cage modifiées avec succès <--")
-        main.close_continue()
-class Afficher:
+        menu.close_continue()
+class Afficher(Main):
     def __init__(self):
-        self.my_db = mysql.connector.connect(
-            host="localhost",
-            user='root',
-            password='$~Bc4gB9',
-            database='Zoo'
-        )
-        self.cursor = self.my_db.cursor()
+        Main.__init__(self)
 
     def get_all_cages(self):
         self.cursor.execute("SELECT * FROM cage")
@@ -212,8 +202,7 @@ class Afficher:
         for animal in animaux:
             id, nom, race, id_cage, date_naissance, pays_origine = animal
             print(f"                       --> Id:{id:02d} | {nom} ({race}),  Né(e) le {date_naissance} ({pays_origine}) actuellement en Cage n° {id_cage}")
-        main.close_continue()
-
+        menu.close_continue()
 
     def afficher_animaux_cages(self):
         print("                                      --> Animaux présents dans les cages <--\n")
@@ -229,7 +218,7 @@ class Afficher:
                     print(f"                                  [Id:{id}] {nom} {race} né le :{date_naissance} ({pays_origine})")
             else:
                 print(f"                                        -----------> Cage {cage[0]} est vide.")
-        main.close_continue()
+        menu.close_continue()
 
     def compter_animaux_par_cage(self):
         compteur_animaux = {}
@@ -243,17 +232,18 @@ class Afficher:
         self.cursor.execute("SELECT COUNT(*) FROM animal")
         total_animaux = self.cursor.fetchone()[0]
         print(f"                                 --> Nombre total d'animaux dans le zoo : {total_animaux} <--")
-        main.close_continue()
+        menu.close_continue()
 
     def calculer_superficie_totale(self):
         self.cursor.execute("SELECT SUM(superficie) FROM cage")
         superficie_totale = self.cursor.fetchone()[0]
         print (f"                               --> La superficie totale des cages est de: {superficie_totale} <--")
-        main.close_continue()
+        menu.close_continue()
 
 gestion = GestionZoo()
 cage = GestionCage()
 show = Afficher()
+menu = Menu()
 main = Main()
-
-main.menu()
+main.__init__()
+menu.menu()

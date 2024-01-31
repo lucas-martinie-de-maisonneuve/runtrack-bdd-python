@@ -9,15 +9,16 @@ class Employe:
             database='LaPlateforme2'
         )
         self.cursor = self.my_db.cursor()
+        self.lancement_prog = True
 
     def get_employe_nom(self):
-        nom = input("                    --> Veuillez entrer le nom de l'employé : ")
+        nom = input("\n                    --> Veuillez entrer le nom de l'employé : ").capitalize()
         return nom
     def get_employe_prenom(self):
-        prenom = input("                    --> Veuillez entrer le prénom de l'employé : ")
+        prenom = input("\n                    --> Veuillez entrer le prénom de l'employé : ").capitalize()
         return prenom
     def get_employe_salaire(self):
-        salaire = float(input("                    --> Veuillez entrer le salaire de l'employé : "))
+        salaire = float(input("\n                    --> Veuillez entrer le salaire de l'employé : "))
         return salaire
     def get_employe_service(self):
         service = int(input("""           
@@ -41,22 +42,26 @@ class Employe:
     def update_service(self, nom, nouveau_service):
         self.cursor.execute(f"UPDATE employe SET id_service = (SELECT id FROM service WHERE nom = '{nouveau_service}') WHERE nom = '{nom}'")
         self.my_db.commit()
+        print(f"\n            Le service de {nom} est désormais {nouveau_service}")
         self.close_continue()
 
     def update_salaire(self, nom, nouveau_salaire):
         self.cursor.execute(f"UPDATE employe SET salaire = {nouveau_salaire} WHERE nom = '{nom}'")
         self.my_db.commit()
+        print(f"\n            Le salaire de {nom} est désormais {nouveau_salaire}")
         self.close_continue()
 
     def add_employee(self):
         nom, prenom, salaire, service = self.get_employe_nom(), self.get_employe_prenom(), self.get_employe_salaire(), self.get_employe_service()
         self.cursor.execute(f"INSERT INTO employe (nom, prenom, salaire, id_service) VALUES ('{nom}', '{prenom}', {salaire}, (SELECT id FROM service WHERE nom = '{service}'))")
         self.my_db.commit()
+        print(f"\n       {nom} {prenom} a bien été ajouté en tant que {service} (Salaire : {salaire}€)")
         self.close_continue()
 
     def delete_employee(self, nom):
         self.cursor.execute(f"DELETE FROM employe WHERE nom = '{nom}'")
         self.my_db.commit()
+        print(f"\n            {nom} a bien été supprimé de la liste des employés")
         self.close_continue()
 
     def print_employee(self):
@@ -64,8 +69,12 @@ class Employe:
         for employee in employees:
             nom, prenom, salaire, service = employee
             salaire = float(salaire)
-            print(f"{nom} {prenom} - {service} (Salaire : {salaire}€)")
-        self.close_continue()
+            print(f"            ---> {nom} {prenom} - {service} (Salaire : {salaire}€)")
+        if self.lancement_prog:
+            self.lancement_prog = False
+            self.modification()
+        else:
+            self.close_continue()
 
     def modification(self):
         choix = int(input(f""" 
@@ -86,15 +95,16 @@ class Employe:
         elif choix == 4 :
             self.add_employee()
         elif choix == 5 :
-            self.delete_employee()
+            self.delete_employee(self.get_employe_nom())
 
     def close_continue(self):
-        continue_choix = int(input("""                    --> Voulez vous revenir au menu ? (Entrez 1 ou 2 pour quitter) <-- """))
-        if continue_choix == 1:
-            self.modification()
-        elif continue_choix == 2:
-            return
-        else:
+        try:
+            continue_choix = int(input("""                    --> Voulez vous revenir au menu ? (Entrez 1 ou 2 pour quitter) <-- """))
+            if continue_choix == 1:
+                self.modification()
+            elif continue_choix == 2:
+                return
+        except ValueError:
             print("                    !!  Choix invalide !!")
             self.close_continue()
 
